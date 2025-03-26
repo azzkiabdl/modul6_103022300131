@@ -6,14 +6,17 @@ public class SayaTubeVideo
     private int id;
     private string title;
     private int playCount;
+    private int count;
+
+    public int Count { get; private set; }
 
     public SayaTubeVideo(string title)
     {
         Contract.Requires(title != null, "Judul video tidak boleh null");
-        Contract.Requires(title.Lenght <= 200, "Judul video maksimal 200 karakter");
+        Contract.Requires(title.Length <= 200, "Judul video maksimal 200 karakter");
 
         Random random = new Random();
-        this.id = id;
+        this.id = random.Next(10000, 99999);
         this.title = title;
         this.playCount = playCount;
     }
@@ -62,7 +65,7 @@ public class SayaTubeUser
     public SayaTubeUser(string username)
     {
         Contract.Requires(username != null, "Username tidak boleh null");
-        Contract.Requires(username.Lenght <= 100, "Username maksimal hanya 100 karakter");
+        Contract.Requires(username.Length <= 100, "Username maksimal hanya 100 karakter");
 
         Random random = new Random();
         this.id = random.Next();
