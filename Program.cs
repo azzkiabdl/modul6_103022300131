@@ -9,6 +9,9 @@ public class SayaTubeVideo
 
     public SayaTubeVideo(string title)
     {
+        Contract.Requires(title != null, "Judul video tidak boleh null");
+        Contract.Requires(title.Lenght <= 200, "Judul video maksimal 200 karakter");
+
         Random random = new Random();
         this.id = id;
         this.title = title;
@@ -17,6 +20,8 @@ public class SayaTubeVideo
 
     public void IncreasePlayCount(int playCount)
     {
+        Contract.Requires(count > 0, "Jumlah play count harus positif");
+        Contract.Requires(count <= 25000000, "Maksimal play sound yang bisa ditambahkan adalah 25.000.000");
         try
         {
             checked
@@ -56,6 +61,9 @@ public class SayaTubeUser
 
     public SayaTubeUser(string username)
     {
+        Contract.Requires(username != null, "Username tidak boleh null");
+        Contract.Requires(username.Lenght <= 100, "Username maksimal hanya 100 karakter");
+
         Random random = new Random();
         this.id = random.Next();
         this.Username = username;
@@ -64,6 +72,8 @@ public class SayaTubeUser
 
     public void AddVideo(SayaTubeVideo video)
     {
+        Contract.Requires(video != null, "Video tidak boleh null");
+        Contract.Requires(video.GetPlayCount() < int.MaxValue, "Play count tidak boleh melebihi batas integer maksimun");
         uploadedVideos.Add(video);
     }
 
@@ -83,6 +93,43 @@ public class SayaTubeUser
         for (int i = 0; i < Math.Min(uploadedVideos.Count, 8); i++)
         {
             Console.WriteLine($"Video {i + 1} judul: {uploadedVideos[i].GetTitle()}");
+        }
+    }
+}
+
+class program
+{
+    static void main()
+    {
+        SayaTubeUser user = new SayaTubeUser("Nama Praktikan");
+
+        for (int i = 1; i <= 10; i++)
+        {
+            SayaTubeVideo video = new SayaTubeVideo($"Review Film {i} oleh Nama Praktikan");
+            video.IncreasePlayCount(100000);
+            user.AddVideo(video);
+        }
+
+        user.PrintAllVideoPlaycount();
+        Console.WriteLine($"Total play count semua video: {user.GetTotalVideoPlayCount()}");
+
+        try
+        {
+            SayaTubeVideo videoError = new SayaTubeVideo(null);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error: {e.Message}");
+        }
+
+        try
+        {
+            SayaTubeVideo videoOverflow = new SayaTubeVideo("Test Overflow");
+            videoOverflow.IncreasePlayCount(int.MaxValue);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error: {e.Message}");
         }
     }
 }
